@@ -21,17 +21,14 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
-  role: String,  // 'customer' or 'company'
+  role: { type: String, default: 'customer' },  // Default role as 'customer'
 });
 
 const User = mongoose.model('User', userSchema);
 
-// Predefined security key for companies
-const COMPANY_SECURITY_KEY = "secretKey123"; // Replace with your desired security key
-
-// Define the /signup route
+// Define the /signup route (for both customers and companies)
 app.post('/signup', async (req, res) => {
-  const { name, email, password, role, securityKey } = req.body;
+  const { name, email, password, role } = req.body;
 
   // Basic validation
   if (!name || !email || !password || !role) {
@@ -44,20 +41,13 @@ app.post('/signup', async (req, res) => {
     return res.status(400).json({ message: 'Account with this email already exists' });
   }
 
-  // If the role is 'company', validate the security key
-  if (role === 'company') {
-    if (securityKey !== COMPANY_SECURITY_KEY) {
-      return res.status(400).json({ message: 'Invalid security key for company signup' });
-    }
-  }
-
   try {
     // Create a new user instance
     const newUser = new User({
       name,
       email,
       password,  // In a real app, hash the password before storing it
-      role,
+      role,  // Save the provided role (customer or company)
     });
 
     // Save the user to the database
