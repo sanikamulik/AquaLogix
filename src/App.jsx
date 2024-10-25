@@ -5,6 +5,8 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home'; // Your existing Home component
 import ShippingRequest from './pages/Transport'; // New Page
 import PortDashboard from './components/PortDashboard';
+import BasicTable2 from './components/Table/Table2';
+
 
 function App() {
   return (
@@ -14,7 +16,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/shipping-request" element={<ShippingRequest />} />
         <Route path="/company-dashboard" element={<PortDashboard />} />
-        
+        <Route path="/ports" element={<BasicTable2 />} />
       </Routes>
     </Router>
   );

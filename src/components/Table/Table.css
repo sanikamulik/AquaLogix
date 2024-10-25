@@ -1,0 +1,78 @@
+/* Set default table width */
+.Table {
+  width: 100%; /* Full width by default */
+  /* Center the table */
+  overflow-x: auto; /* Enable horizontal scrolling if content overflows */
+  height: 65%;
+}
+
+/* Adjust cell padding */
+.MuiTableRow-root > * {
+  padding: 10px;
+}
+
+.MuiTableRow-root.MuiTableRow-head > * {
+  font-weight: bold !important;
+}
+
+/* Remove table borders */
+.Table td,
+.Table th {
+  border: none !important;
+}
+
+/* First table child styling */
+.Table:first-child {
+  border-radius: 0.7rem !important;
+}
+
+/* Styling for the status cell */
+.status {
+  padding: 8px;
+  border-radius: 8px;
+}
+
+/* Details column color */
+.Details {
+  color: blueviolet;
+}
+
+/* Responsive Design */
+
+/* For screen widths below 1200px */
+@media screen and (max-width: 1200px) {
+  .Table {
+    width: 100%; /* Ensure full width */
+    max-width: 100%; /* Remove max width limit */
+    overflow-x: auto; /* Enable horizontal scrolling if necessary */
+    margin-top: 2rem;
+  }
+
+  table {
+    width: 100%; /* Ensure table occupies full available width */
+  }
+}
+
+/* For screen widths below 768px */
+@media screen and (max-width: 768px) {
+  .Table {
+    width: 100%; /* Full width for small screens */
+    max-width: 23rem; /* Limit the width for small screens */
+    margin-top: 2rem;
+    overflow-x: auto; /* Enable scrolling if needed */
+  }
+
+  .TableContainer {
+    width: 100%; /* Ensure the container also adjusts */
+    overflow-x: auto; /* Enable horizontal scrolling */
+  }
+
+  table {
+    width: 100%; /* Table should take full width */
+  }
+
+  /* Reduce padding for smaller screens */
+  .MuiTableRow-root > * {
+    padding: 5px; /* Adjust padding for small screens */
+  }
+}

@@ -69,8 +69,8 @@ function Navbar() {
   return (
     <div className="absolute top-0 left-0 w-full p-4 flex justify-between z-10 backdrop-blur-md bg-opacity-40 text-black text-base">
       <div className="text-2xl">
-        <span className="text-emerald-600 font-semibold">Aqua</span>
-        <span className="text-blue-900 font-semibold">Logix</span>
+        <span className="text-blue-900 font-semibold">Aqua</span>
+        <span className=" text-emerald-600 font-semibold">Logix</span>
       </div>
 
       <div className="flex space-x-8 mt-1">

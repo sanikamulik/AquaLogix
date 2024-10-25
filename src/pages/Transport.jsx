@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const ShippingRequest = () => {
   const [source, setSource] = useState('');
@@ -20,14 +21,14 @@ const ShippingRequest = () => {
   const vesselOptions = ['Vessel A', 'Vessel B', 'Vessel C'];
   const companyOptions = ['Company X', 'Company Y', 'Company Z'];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const suggestedContainer = weight > 500 ? '40-ft Container' : '20-ft Container';
+    const suggestedContainer = weight > 100 ? '40-ft Container' : '20-ft Container';
     const suggestedVessel = vesselOptions[Math.floor(Math.random() * vesselOptions.length)];
     const suggestedCompany = companyOptions[Math.floor(Math.random() * companyOptions.length)];
     const estimatedCost = (Math.random() * 500).toFixed(2);
-    const estimatedTime = Math.floor(Math.random() * 10) + 1;
+    const estimatedTime = `${Math.floor(Math.random() * 10) + 1} days`;
     const trackingNo = `TRK-${Math.floor(Math.random() * 900000 + 100000)}`;
 
     setVessel(suggestedVessel);
@@ -36,6 +37,27 @@ const ShippingRequest = () => {
     setCost(estimatedCost);
     setShippingTime(estimatedTime);
     setTrackingNumber(trackingNo);
+
+    // Save the shipping request to the backend
+    try {
+      const response = await axios.post('http://localhost:5000/shipping-request', {
+        source,
+        destination,
+        goodsType,
+        weight,
+        shippingDetails: {
+          vessel: suggestedVessel,
+          container: suggestedContainer,
+          shippingCompany: suggestedCompany,
+          estimatedCost,
+          estimatedTime,
+          trackingNumber: trackingNo,
+        },
+      });
+      console.log('Shipping request saved:', response.data);
+    } catch (error) {
+      console.error('Error saving shipping request:', error);
+    }
 
     // Clear the form fields after submission
     setSource('');

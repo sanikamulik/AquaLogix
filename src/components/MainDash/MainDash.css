@@ -1,0 +1,24 @@
+.MainDash {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 100vh; /* Fill the entire height of the viewport */
+    padding: 1rem; /* Optional: add padding to prevent content from touching edges */
+    box-sizing: border-box; /* Ensure padding does not increase total height */
+  }
+  
+  @media screen and (max-width: 1200px) {
+    .MainDash {
+      justify-content: flex-start;
+      margin-top: 2rem;
+      height: auto; /* Adjust height on smaller screens */
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .MainDash {
+      align-items: center;
+      height: auto; /* Adjust height on smaller screens */
+    }
+  }
+  
