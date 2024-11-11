@@ -1,0 +1,58 @@
+.ticket {
+    width: 60%; /* Adjust width as needed */
+    height: auto; /* Auto height to fit content */
+    background-color: #f5f0de; /* Vintage paper color */
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    margin-left: 20%;
+  }
+  
+  .ticket-border {
+    width: 800%;
+    height: auto;
+    border: 2px solid #c44e4e; /* Border color */
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+  
+  .ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .ticket-star {
+    font-size: 1.5em;
+    color: black;
+  }
+  
+  .ticket-star:first-of-type {
+    position: absolute;
+    left: 10px;
+  }
+  
+  .ticket-star:last-of-type {
+    position: absolute;
+    right: 10px;
+  }
+  
+  .ticket-info {
+    margin-top: 15px;
+    text-align: left;
+  }
+  
+  .ticket-info p {
+    margin: 5px 0;
+  }
+  
+  .ticket-info strong {
+    font-weight: bold;
+  }
+  

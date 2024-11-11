@@ -86,7 +86,7 @@ function Navbar() {
             <button onClick={() => navigate("/shipping-request")}>
               TransportMyGoodies
             </button>
-            <button>Track</button>
+            {/* <button>Track</button> */}
           </>
         )}
 
@@ -95,8 +95,8 @@ function Navbar() {
             <button onClick={() => navigate("/company-dashboard")}>
               Dashboard
             </button>
-            <button>Route Optimization</button>
-            <button>Logistics Manager</button>
+            {/* <button>Route Optimization</button>
+            <button>Logistics Manager</button> */}
           </>
         )}
 

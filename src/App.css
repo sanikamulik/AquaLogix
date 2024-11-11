@@ -102,3 +102,41 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.TransportGoodiesApp {
+  color: var(--blue-darkest);
+  background-color: var(--blue-dark);
+  background-image: radial-gradient(
+      at 80% 20%,
+      hsla(210, 100%, 70%, 1) 0px, /* Lighter blue */
+      transparent 50%
+    ),
+    radial-gradient(at 80% 0%, hsla(190, 100%, 60%, 1) 0px, transparent 50%), /* Lighter cyan */
+    radial-gradient(at 0% 50%, hsla(180, 100%, 60%, 1) 0px, transparent 50%), /* Lighter cyan */
+    radial-gradient(at 80% 50%, hsla(150, 100%, 65%, 1) 0px, transparent 50%), /* Lighter green */
+    radial-gradient(at 0% 100%, hsla(140, 100%, 60%, 1) 0px, transparent 50%), /* Lighter green */
+    radial-gradient(at 80% 100%, hsla(210, 100%, 70%, 1) 0px, transparent 50%), /* Lighter blue */
+    radial-gradient(at 0% 0%, hsla(200, 100%, 60%, 1) 0px, transparent 50%); /* Lighter cyan */
+  width: 100vw;
+  height: 100vh;
+  /* height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif; */
+}
+
+/* .TransportGoodiesApp  {
+  background-color: var(--blue-darkest);
+} */
+
+.form-container {
+  background: rgb(248, 248, 248); /* Semi-transparent white */
+  border-radius: 1rem;
+  padding: 2rem;
+ /* Optional: subtle shadow for the glass effect */
+  width:90%;
+  margin-left: 5%;
+  color: white; /* Text color inside the form */
+}
+

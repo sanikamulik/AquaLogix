@@ -6,41 +6,26 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import axios from 'axios'; // Import axios for HTTP requests
+import axios from 'axios';
 import './Table.css';
 
-// Styling for the status cell
 const makeStyle = (status) => {
-  if (status === 'Approved') {
-    return {
-      background: 'rgb(145 254 159 / 47%)',
-      color: 'green',
-      width : '90%',
-    };
-  } else if (status === 'Pending') {
-    return {
-      background: '#ffadad8f',
-      color: 'red',
-      width : '90%',
-    };
-  } else if (status === 'Delivered') {
-    return {
-      background: '#59bfff',
-      color: 'blue',
-    };
-  } else {
-    return {
-      background: '#f0f0f0',
-      color: 'black',
-    };
+  switch (status) {
+    case 'Approved':
+      return { background: 'rgb(145 254 159 / 47%)', color: 'green' };
+    case 'Pending':
+      return { background: '#ffadad8f', color: 'red' };
+    case 'Delivered':
+      return { background: '#59bfff', color: 'blue' };
+    default:
+      return { background: '#f0f0f0', color: 'black' };
   }
 };
 
-export default function BasicTable() {
+export default function ShippingRequestTable() {
   const [shippingRequests, setShippingRequests] = useState([]);
 
   useEffect(() => {
-    // Fetch shipping requests from the backend
     const fetchShippingRequests = async () => {
       try {
         const response = await axios.get('http://localhost:5000/shipping-requests');
@@ -49,42 +34,51 @@ export default function BasicTable() {
         console.error('Error fetching shipping requests:', error);
       }
     };
-
     fetchShippingRequests();
   }, []);
 
   return (
     <div className="Table">
-      <h3 className='font-semibold text-black mt-2'>Shippings</h3>
+      <h3 className="font-semibold text-black mt-2">Shippings</h3>
       <TableContainer
         component={Paper}
-        style={{ boxShadow: '0px 13px 20px 0px #80808029' }}
+        style={{
+          boxShadow: '0px 13px 20px 0px #80808029',
+          maxHeight: '350px', // Set fixed height for vertical scroll
+          maxWidth: '1000px', // Set fixed width for horizontal scroll
+          overflow: 'auto', // Enable both X and Y scrolling
+        }}
       >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Order ID</TableCell> {/* New Order ID Column */}
-              <TableCell>Source</TableCell>
-              <TableCell align="left">Destination</TableCell>
-              <TableCell align="left">Goods Type</TableCell>
-              <TableCell align="left">Weight (kg)</TableCell>
-              <TableCell align="left">Status</TableCell> {/* New Status Column */}
-              <TableCell align="left">Created At</TableCell>
+        <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead  >
+            <TableRow >
+              <TableCell style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Order ID</TableCell>
+              <TableCell style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Sender Name</TableCell>
+              <TableCell  style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Receiver Name</TableCell>
+              <TableCell style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Item</TableCell>
+              <TableCell style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Category</TableCell>
+              <TableCell style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Approx. Weight (kg)</TableCell>
+              <TableCell style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Source</TableCell>
+              <TableCell style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Destination</TableCell>
+              <TableCell style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Shipping Date</TableCell>
+              <TableCell style={{backgroundColor: '#dcfce7', fontWeight: 'bold' }}>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {shippingRequests.map((request, index) => (
-              <TableRow
-                key={index}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell>{request.orderId}</TableCell> {/* Display Order ID */}
+              <TableRow key={index}>
+                <TableCell>{request.orderId}</TableCell>
+                <TableCell>{request.senderName}</TableCell>
+                <TableCell>{request.receiverName}</TableCell>
+                <TableCell>{request.item}</TableCell>
+                <TableCell>{request.category}</TableCell>
+                <TableCell>{request.approxWeight}</TableCell>
                 <TableCell>{request.source}</TableCell>
-                <TableCell align="left">{request.destination}</TableCell>
-                <TableCell align="left">{request.goodsType}</TableCell>
-                <TableCell align="left">{request.weight}</TableCell>
-                <TableCell align="left" style={makeStyle(request.status)}>{request.status}</TableCell> {/* Render Status */}
-                <TableCell align="left">{new Date(request.createdAt).toLocaleString()}</TableCell>
+                <TableCell>{request.destination}</TableCell>
+                <TableCell>{new Date(request.shippingDate).toLocaleDateString()}</TableCell>
+                {/* <TableCell>{request.estimatedCost ? `$${request.estimatedCost.toFixed(2)}` : 'N/A'}</TableCell>
+                <TableCell>{request.estimatedTime}</TableCell> */}
+                <TableCell style={makeStyle(request.status)}>{request.status}</TableCell>
               </TableRow>
             ))}
           </TableBody>

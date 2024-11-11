@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Visualizations</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      * {
+        margin: 10px;
+        padding: 10px;
+      }
+        .chart {
+            font-family: Arial, sans-serif;
+            margin-bottom: 40px;
+        }
+        .bar {
+            fill: steelblue;
+            transition: height 0.3s ease, y 0.3s ease;
+        }
+        .bar:hover {
+            fill: orange;
+        }
+        .bar-label {
+            fill: white;
+            font-size: 12px;
+            text-anchor: middle;
+        }
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 5px;
+            background: lightgray;
+            border: 1px solid gray;
+            border-radius: 5px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>Order Analytics</h1>
+    <div id="tooltip" class="tooltip"></div>
+    
+    <div id="destination-distribution" class="chart"></div>
+    <div id="goods-weight" class="chart"></div>
+    <div id="cost-distribution" class="chart"></div>
+    <div id="time-analysis" class="chart"></div>
+
+    <script>
+        d3.json("order_records.json").then(data => {
+            // Tooltip setup
+            const tooltip = d3.select("#tooltip");
+
+            // Visualization 1: Destination Distribution (Bar Chart)
+            const destinationData = Array.from(d3.rollup(data, v => v.length, d => d.destination), ([key, value]) => ({ destination: key, count: value }));
+
+            const destWidth = 500, destHeight = 300, barPadding = 0.1;
+            const destSvg = d3.select("#destination-distribution")
+                              .append("svg")
+                              .attr("width", destWidth)
+                              .attr("height", destHeight);
+
+            const xDest = d3.scaleBand()
+                            .domain(destinationData.map(d => d.destination))
+                            .range([0, destWidth])
+                            .padding(barPadding);
+            
+            const yDest = d3.scaleLinear()
+                            .domain([0, d3.max(destinationData, d => d.count)])
+                            .nice()
+                            .range([destHeight, 0]);
+
+            destSvg.selectAll(".bar")
+                  .data(destinationData)
+                  .enter().append("rect")
+                  .attr("class", "bar")
+                  .attr("x", d => xDest(d.destination))
+                  .attr("y", d => yDest(d.count))
+                  .attr("width", xDest.bandwidth())
+                  .attr("height", d => destHeight - yDest(d.count))
+                  .on("mouseover", (event, d) => {
+                      tooltip.style("opacity", 1)
+                             .html(`Destination: ${d.destination}<br>Count: ${d.count}`)
+                             .style("left", (event.pageX + 5) + "px")
+                             .style("top", (event.pageY - 30) + "px");
+                  })
+                  .on("mouseout", () => {
+                      tooltip.style("opacity", 0);
+                  });
+
+            destSvg.append("g")
+                  .attr("transform", `translate(0,${destHeight})`)
+                  .call(d3.axisBottom(xDest))
+                  .selectAll("text")
+                  .attr("transform", "rotate(-45)")
+                  .style("text-anchor", "end");
+
+            destSvg.append("g")
+                  .call(d3.axisLeft(yDest));
+
+            // Add title and axes labels
+            destSvg.append("text")
+                  .attr("x", destWidth / 2)
+                  .attr("y", 20)
+                  .attr("text-anchor", "middle")
+                  .text("Destination Distribution");
+
+            destSvg.append("text")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", 20)
+                  .attr("x", -destHeight / 2)
+                  .attr("dy", ".71em")
+                  .attr("text-anchor", "end")
+                  .text("Count");
+
+            // Visualization 2: Goods Type and Weight (Scatter Plot)
+            const weightData = data.map(d => ({ goodsType: d.goodsType, weight: d.weight }));
+
+            const weightWidth = 500, weightHeight = 300;
+            const weightSvg = d3.select("#goods-weight")
+                                .append("svg")
+                                .attr("width", weightWidth)
+                                .attr("height", weightHeight);
+
+            const xWeight = d3.scalePoint()
+                              .domain(weightData.map(d => d.goodsType))
+                              .range([0, weightWidth])
+                              .padding(0.5);
+
+            const yWeight = d3.scaleLinear()
+                              .domain([0, d3.max(weightData, d => d.weight)])
+                              .nice()
+                              .range([weightHeight, 0]);
+
+            weightSvg.selectAll("circle")
+                    .data(weightData)
+                    .enter().append("circle")
+                    .attr("cx", d => xWeight(d.goodsType))
+                    .attr("cy", d => yWeight(d.weight))
+                    .attr("r", 5)
+                    .attr("fill", "teal")
+                    .on("mouseover", (event, d) => {
+                        tooltip.style("opacity", 1)
+                               .html(`Goods Type: ${d.goodsType}<br>Weight: ${d.weight}`)
+                               .style("left", (event.pageX + 5) + "px")
+                               .style("top", (event.pageY - 30) + "px");
+                    })
+                    .on("mouseout", () => {
+                        tooltip.style("opacity", 0);
+                    });
+
+            weightSvg.append("g")
+                    .attr("transform", `translate(0,${weightHeight})`)
+                    .call(d3.axisBottom(xWeight));
+
+            weightSvg.append("g")
+                    .call(d3.axisLeft(yWeight));
+
+            // Add title and axes labels
+            weightSvg.append("text")
+                     .attr("x", weightWidth / 2)
+                     .attr("y", 20)
+                     .attr("text-anchor", "middle")
+                     .text("Goods Type and Weight");
+
+            weightSvg.append("text")
+                     .attr("transform", "rotate(-90)")
+                     .attr("y", 20)
+                     .attr("x", -weightHeight / 2)
+                     .attr("dy", ".71em")
+                     .attr("text-anchor", "end")
+                     .text("Weight");
+
+            // Visualization 3: Cost Distribution (Histogram)
+            const costData = data.map(d => d.estimatedCost);
+            
+            const histWidth = 500, histHeight = 300;
+            const histSvg = d3.select("#cost-distribution")
+                              .append("svg")
+                              .attr("width", histWidth)
+                              .attr("height", histHeight);
+
+            const xCost = d3.scaleLinear()
+                            .domain([0, d3.max(costData)])
+                            .nice()
+                            .range([0, histWidth]);
+
+            const histogram = d3.histogram()
+                                .domain(xCost.domain())
+                                .thresholds(xCost.ticks(20));
+
+            const bins = histogram(costData);
+
+            const yCost = d3.scaleLinear()
+                            .domain([0, d3.max(bins, d => d.length)])
+                            .nice()
+                            .range([histHeight, 0]);
+
+            histSvg.selectAll(".bar")
+                  .data(bins)
+                  .enter().append("rect")
+                  .attr("class", "bar")
+                  .attr("x", d => xCost(d.x0))
+                  .attr("y", d => yCost(d.length))
+                  .attr("width", d => xCost(d.x1) - xCost(d.x0) - 1)
+                  .attr("height", d => histHeight - yCost(d.length))
+                  .on("mouseover", (event, d) => {
+                      tooltip.style("opacity", 1)
+                             .html(`Cost: ${d.x0} - ${d.x1}<br>Count: ${d.length}`)
+                             .style("left", (event.pageX + 5) + "px")
+                             .style("top", (event.pageY - 30) + "px");
+                  })
+                  .on("mouseout", () => {
+                      tooltip.style("opacity", 0);
+                  });
+
+            histSvg.append("g")
+                  .attr("transform", `translate(0,${histHeight})`)
+                  .call(d3.axisBottom(xCost));
+
+            histSvg.append("g")
+                  .call(d3.axisLeft(yCost));
+
+            // Add title and axes labels
+            histSvg.append("text")
+                  .attr("x", histWidth / 2)
+                  .attr("y", 20)
+                  .attr("text-anchor", "middle")
+                  .text("Cost Distribution");
+
+            histSvg.append("text")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", 20)
+                  .attr("x", -histHeight / 2)
+                  .attr("dy", ".71em")
+                  .attr("text-anchor", "end")
+                  .text("Count");
+
+        }).catch(error => {
+            console.error("Error loading the data:", error);
+        });
+    </script>
+</body>
+</html>
