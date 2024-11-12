@@ -86,6 +86,9 @@ function Navbar() {
             <button onClick={() => navigate("/shipping-request")}>
               TransportMyGoodies
             </button>
+            {/* <button onClick={() => navigate("/map")}>
+              Map
+            </button> */}
             {/* <button>Track</button> */}
           </>
         )}

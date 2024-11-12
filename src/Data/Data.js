@@ -29,7 +29,8 @@ export const SidebarData = [
   {
     id: 3,
     icon: UilChart,
-    heading: 'Analytics',
+    heading: 'Map View',
+    path:'/map',
    
   },
 ];
